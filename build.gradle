@@ -1,0 +1,176 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'geckolib.disable_examples', 'true'
+            // Keep refmap compatible with dev mappings (same as SuperbWarfare)
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    mavenLocal()
+
+    // Local libs (same pattern as vvp2)
+    flatDir {
+        dirs 'libs'
+    }
+
+    // CurseMaven (same pattern as vvp2)
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
+    // Curios
+    maven {
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup "top.theillusivec4.curios"
+        }
+    }
+
+    // GeckoLib repository
+    maven {
+        name = "GeckoLib"
+        url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+        content {
+            includeGroupByRegex("software\\.bernie.*")
+            includeGroup("com.eliotlash.mclib")
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // Curios (required by SuperbWarfare)
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.4.2+1.20.1")
+
+    // GeckoLib for animations (CurseMaven)
+    implementation fg.deobf("curse.maven:geckolib-388172:6658942")
+    implementation fg.deobf("com.eliotlash.mclib:mclib:20")
+
+    // SuperbWarfare dependency (CurseMaven)
+    implementation fg.deobf("curse.maven:superb-warfare-1218165:8104849")
+
+    // MinecraftTransportSimulator / Immersive Vehicles — compile-only, OPTIONAL soft dependency.
+    // CurseForge project 286703, file 7926604 (the exact build the addon targets for compat).
+    // NOT bundled and NOT declared in mods.toml: the addon must load and run without MTS present.
+    // All MTS-typed code must stay isolated behind a ModList.isLoaded(...) guard.
+    compileOnly fg.deobf("curse.maven:minecraft-transport-simulator-286703:7926604")
+    // Dev-only: makes MTS present in `runClient` so the control bridge / mixin can be tested in-dev.
+    // runtimeOnly is NOT bundled into the published jar and adds no mods.toml dependency, so the
+    // addon's optional/soft-dependency status is unchanged. Remove this line and MTS simply won't be
+    // in the dev runtime (the addon still loads — it's the "MTS absent" path).
+    runtimeOnly fg.deobf("curse.maven:minecraft-transport-simulator-286703:7926604")
+
+    // Mixin annotation processor — generates the refmap so mixins apply in reobf/production
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+mixin {
+    add sourceSets.main, 'superbaddon.refmap.json'
+    config 'superbaddon.mixins.json'
+    // Optional MTS-only mixins live in their own required:false config so a missing MTS never crashes.
+    config 'superbaddon.mts.mixins.json'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+
+    options.release = 17
+    options.encoding = 'UTF-8'
+}

@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.yy.superbaddon.mixin.mts",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "superbaddon.refmap.json",
+  "client": [
+    "ControlSystemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

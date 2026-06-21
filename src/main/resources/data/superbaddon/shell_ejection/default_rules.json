@@ -1,0 +1,1209 @@
+{
+  "format": 5,
+  "rules": [
+    {
+      "priority": 1000,
+      "target": {
+        "guns": [
+          "superbwarfare:taser",
+          "superbwarfare:bocek"
+        ]
+      },
+      "ejection": {
+        "default": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "priority": 950,
+      "target": {},
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:javelin_missile": {
+            "mode": "none"
+          },
+          "superbwarfare:medium_anti_air_missile": {
+            "mode": "none"
+          },
+          "superbwarfare:medium_anti_ground_missile": {
+            "mode": "none"
+          },
+          "superbwarfare:large_anti_ground_missile": {
+            "mode": "none"
+          },
+          "superbwarfare:swarm_drone": {
+            "mode": "none"
+          },
+          "superbwarfare:small_aerial_bomb": {
+            "mode": "none"
+          },
+          "superbwarfare:medium_aerial_bomb": {
+            "mode": "none"
+          },
+          "superbwarfare:small_rocket": {
+            "mode": "none"
+          },
+          "superbwarfare:medium_rocket_ap": {
+            "mode": "none"
+          },
+          "superbwarfare:medium_rocket_he": {
+            "mode": "none"
+          },
+          "superbwarfare:medium_rocket_cm": {
+            "mode": "none"
+          },
+          "superbwarfare:rpg_rocket_standard": {
+            "mode": "none"
+          },
+          "superbwarfare:rpg_rocket_tbg": {
+            "mode": "none"
+          },
+          "superbwarfare:mortar_shell": {
+            "mode": "none"
+          },
+          "superbwarfare:mortar_shell_wp": {
+            "mode": "none"
+          },
+          "superbwarfare:potion_mortar_shell": {
+            "mode": "none"
+          },
+          "superbwarfare:hand_grenade": {
+            "mode": "none"
+          },
+          "superbwarfare:rgo_grenade": {
+            "mode": "none"
+          },
+          "superbwarfare:m18_smoke_grenade": {
+            "mode": "none"
+          },
+          "superbwarfare:claymore_mine": {
+            "mode": "none"
+          },
+          "superbwarfare:tm_62": {
+            "mode": "none"
+          },
+          "superbwarfare:ptkm_1r": {
+            "mode": "none"
+          },
+          "superbwarfare:c4_bomb": {
+            "mode": "none"
+          },
+          "superbwarfare:blu_43_mine": {
+            "mode": "none"
+          },
+          "superbwarfare:edd": {
+            "mode": "none"
+          }
+        }
+      }
+    },
+    {
+      "priority": 940,
+      "target": {
+        "vehicles": [
+          "superbwarfare:type_63"
+        ],
+        "weapons": [
+          "main",
+          "ap",
+          "he",
+          "cm"
+        ]
+      },
+      "ejection": {
+        "default": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "priority": 935,
+      "target": {
+        "vehicles": [
+          "superbwarfare:annihilator"
+        ]
+      },
+      "ejection": {
+        "default": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "priority": 930,
+      "target": {
+        "vehicles": [
+          "superbwarfare:plz_05"
+        ],
+        "weapons": [
+          "cannon",
+          "main"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:large_shell_ap": {
+            "mode": "none"
+          },
+          "superbwarfare:large_shell_he": {
+            "mode": "none"
+          },
+          "superbwarfare:large_shell_cm": {
+            "mode": "none"
+          },
+          "superbwarfare:large_shell_gs": {
+            "mode": "none"
+          },
+          "superbwarfare:large_shell_wp": {
+            "mode": "none"
+          }
+        }
+      }
+    },
+    {
+      "priority": 900,
+      "target": {
+        "vehicles": [
+          "superbwarfare:a_10a"
+        ],
+        "weapons": [
+          "cannon"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:small_shell_ap": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:small_shell_he": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:small_shell_gs": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:small_shell_aa": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          }
+        }
+      }
+    },
+    {
+      "priority": 890,
+      "target": {
+        "vehicles": [
+          "superbwarfare:hpj_11",
+          "superbwarfare:lav_ad"
+        ],
+        "weapons": [
+          "main",
+          "cannon"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:small_shell_ap": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:small_shell_he": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:small_shell_gs": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:small_shell_aa": {
+            "mode": "store",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "fallback_to_drop": false
+          }
+        }
+      }
+    },
+    {
+      "priority": 880,
+      "target": {
+        "vehicles": [
+          "superbwarfare:ah_6",
+          "superbwarfare:mi_28",
+          "superbwarfare:lav_150",
+          "superbwarfare:lav_25",
+          "superbwarfare:bmp_2",
+          "superbwarfare:bradley"
+        ],
+        "weapons": [
+          "cannon"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:small_shell_ap": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          },
+          "superbwarfare:small_shell_he": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          },
+          "superbwarfare:small_shell_gs": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          },
+          "superbwarfare:small_shell_aa": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 875,
+      "target": {
+        "vehicles": [
+          "superbwarfare:yx_100"
+        ],
+        "weapons": [
+          "passengercannon"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:small_shell_ap": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          },
+          "superbwarfare:small_shell_he": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          },
+          "superbwarfare:small_shell_gs": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          },
+          "superbwarfare:small_shell_aa": {
+            "mode": "drop",
+            "casing": "superbaddon:autocannon_casing",
+            "count": 1,
+            "pickup_delay": 60,
+            "offset": [
+              0.45,
+              -0.1,
+              -0.2
+            ],
+            "velocity": [
+              0.18,
+              0.1,
+              -0.04
+            ],
+            "random_velocity": 0.05,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.45,
+                  -0.1,
+                  -0.2
+                ],
+                "velocity": [
+                  0.18,
+                  0.1,
+                  -0.04
+                ],
+                "random_velocity": 0.05
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 860,
+      "target": {
+        "vehicles": [
+          "superbwarfare:lav_150",
+          "superbwarfare:lav_25",
+          "superbwarfare:bmp_2",
+          "superbwarfare:bradley",
+          "superbwarfare:ztz_99a",
+          "superbwarfare:t_90a",
+          "superbwarfare:m_1a_2",
+          "superbwarfare:yx_100"
+        ],
+        "weapons": [
+          "machinegun"
+        ]
+      },
+      "ejection": {
+        "default": {
+          "mode": "store",
+          "casing": "superbaddon:brass_casing",
+          "count": 1,
+          "fallback_to_drop": false
+        }
+      }
+    },
+    {
+      "priority": 840,
+      "target": {
+        "vehicles": [
+          "superbwarfare:ztz_99a",
+          "superbwarfare:t_90a",
+          "superbwarfare:yx_100"
+        ],
+        "weapons": [
+          "cannon"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:large_shell_ap": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 80,
+            "offset": [
+              0.0,
+              0.2,
+              -0.65
+            ],
+            "velocity": [
+              0.0,
+              0.12,
+              -0.18
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "rear",
+                "offset": [
+                  0.0,
+                  0.2,
+                  -0.65
+                ],
+                "velocity": [
+                  0.0,
+                  0.12,
+                  -0.18
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_he": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 80,
+            "offset": [
+              0.0,
+              0.2,
+              -0.65
+            ],
+            "velocity": [
+              0.0,
+              0.12,
+              -0.18
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "rear",
+                "offset": [
+                  0.0,
+                  0.2,
+                  -0.65
+                ],
+                "velocity": [
+                  0.0,
+                  0.12,
+                  -0.18
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_cm": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 80,
+            "offset": [
+              0.0,
+              0.2,
+              -0.65
+            ],
+            "velocity": [
+              0.0,
+              0.12,
+              -0.18
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "rear",
+                "offset": [
+                  0.0,
+                  0.2,
+                  -0.65
+                ],
+                "velocity": [
+                  0.0,
+                  0.12,
+                  -0.18
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_gs": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 80,
+            "offset": [
+              0.0,
+              0.2,
+              -0.65
+            ],
+            "velocity": [
+              0.0,
+              0.12,
+              -0.18
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "rear",
+                "offset": [
+                  0.0,
+                  0.2,
+                  -0.65
+                ],
+                "velocity": [
+                  0.0,
+                  0.12,
+                  -0.18
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_wp": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 80,
+            "offset": [
+              0.0,
+              0.2,
+              -0.65
+            ],
+            "velocity": [
+              0.0,
+              0.12,
+              -0.18
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "rear",
+                "offset": [
+                  0.0,
+                  0.2,
+                  -0.65
+                ],
+                "velocity": [
+                  0.0,
+                  0.12,
+                  -0.18
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 830,
+      "target": {
+        "vehicles": [
+          "superbwarfare:m_1a_2"
+        ],
+        "weapons": [
+          "cannon"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:large_shell_ap": {
+            "mode": "store",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:large_shell_he": {
+            "mode": "store",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:large_shell_cm": {
+            "mode": "store",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:large_shell_gs": {
+            "mode": "store",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "fallback_to_drop": false
+          },
+          "superbwarfare:large_shell_wp": {
+            "mode": "store",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "fallback_to_drop": false
+          }
+        }
+      }
+    },
+    {
+      "priority": 820,
+      "target": {
+        "vehicles": [
+          "superbwarfare:mk_42",
+          "superbwarfare:mle_1934",
+          "superbwarfare:bl_132"
+        ],
+        "weapons": [
+          "main"
+        ]
+      },
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:large_shell_ap": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 100,
+            "offset": [
+              0.6,
+              0.05,
+              -0.55
+            ],
+            "velocity": [
+              0.16,
+              0.08,
+              -0.14
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.6,
+                  0.05,
+                  -0.55
+                ],
+                "velocity": [
+                  0.16,
+                  0.08,
+                  -0.14
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_he": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 100,
+            "offset": [
+              0.6,
+              0.05,
+              -0.55
+            ],
+            "velocity": [
+              0.16,
+              0.08,
+              -0.14
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.6,
+                  0.05,
+                  -0.55
+                ],
+                "velocity": [
+                  0.16,
+                  0.08,
+                  -0.14
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_cm": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 100,
+            "offset": [
+              0.6,
+              0.05,
+              -0.55
+            ],
+            "velocity": [
+              0.16,
+              0.08,
+              -0.14
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.6,
+                  0.05,
+                  -0.55
+                ],
+                "velocity": [
+                  0.16,
+                  0.08,
+                  -0.14
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_gs": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 100,
+            "offset": [
+              0.6,
+              0.05,
+              -0.55
+            ],
+            "velocity": [
+              0.16,
+              0.08,
+              -0.14
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.6,
+                  0.05,
+                  -0.55
+                ],
+                "velocity": [
+                  0.16,
+                  0.08,
+                  -0.14
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          },
+          "superbwarfare:large_shell_wp": {
+            "mode": "drop",
+            "casing": "superbaddon:large_shell_stub",
+            "count": 1,
+            "pickup_delay": 100,
+            "offset": [
+              0.6,
+              0.05,
+              -0.55
+            ],
+            "velocity": [
+              0.16,
+              0.08,
+              -0.14
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.6,
+                  0.05,
+                  -0.55
+                ],
+                "velocity": [
+                  0.16,
+                  0.08,
+                  -0.14
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 700,
+      "target": {},
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:grenade_40mm": {
+            "mode": "drop",
+            "casing": "superbaddon:heavy_casing",
+            "count": 1,
+            "pickup_delay": 40,
+            "offset": [
+              0.18,
+              -0.08,
+              -0.12
+            ],
+            "velocity": [
+              0.07,
+              0.06,
+              -0.03
+            ],
+            "random_velocity": 0.025,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.18,
+                  -0.08,
+                  -0.12
+                ],
+                "velocity": [
+                  0.07,
+                  0.06,
+                  -0.03
+                ],
+                "random_velocity": 0.025
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 650,
+      "target": {},
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:shotgun_ammo": {
+            "mode": "drop",
+            "casing": "superbaddon:shotgun_hull",
+            "count": 1,
+            "pickup_delay": 30,
+            "offset": [
+              0.2,
+              -0.08,
+              -0.1
+            ],
+            "velocity": [
+              0.1,
+              0.08,
+              -0.02
+            ],
+            "random_velocity": 0.03,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.2,
+                  -0.08,
+                  -0.1
+                ],
+                "velocity": [
+                  0.1,
+                  0.08,
+                  -0.02
+                ],
+                "random_velocity": 0.03
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 640,
+      "target": {},
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:heavy_ammo": {
+            "mode": "drop",
+            "casing": "superbaddon:heavy_casing",
+            "count": 1,
+            "pickup_delay": 30,
+            "offset": [
+              0.25,
+              -0.05,
+              -0.14
+            ],
+            "velocity": [
+              0.14,
+              0.08,
+              -0.04
+            ],
+            "random_velocity": 0.04,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.25,
+                  -0.05,
+                  -0.14
+                ],
+                "velocity": [
+                  0.14,
+                  0.08,
+                  -0.04
+                ],
+                "random_velocity": 0.04
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "priority": 600,
+      "target": {},
+      "ejection": {
+        "by_ammo": {
+          "superbwarfare:handgun_ammo": {
+            "mode": "drop",
+            "casing": "superbaddon:brass_casing",
+            "count": 1,
+            "pickup_delay": 24,
+            "offset": [
+              0.18,
+              -0.04,
+              -0.12
+            ],
+            "velocity": [
+              0.1,
+              0.07,
+              -0.03
+            ],
+            "random_velocity": 0.03,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.18,
+                  -0.04,
+                  -0.12
+                ],
+                "velocity": [
+                  0.1,
+                  0.07,
+                  -0.03
+                ],
+                "random_velocity": 0.03
+              }
+            ]
+          },
+          "superbwarfare:rifle_ammo": {
+            "mode": "drop",
+            "casing": "superbaddon:brass_casing",
+            "count": 1,
+            "pickup_delay": 24,
+            "offset": [
+              0.18,
+              -0.04,
+              -0.12
+            ],
+            "velocity": [
+              0.1,
+              0.07,
+              -0.03
+            ],
+            "random_velocity": 0.03,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.18,
+                  -0.04,
+                  -0.12
+                ],
+                "velocity": [
+                  0.1,
+                  0.07,
+                  -0.03
+                ],
+                "random_velocity": 0.03
+              }
+            ]
+          },
+          "superbwarfare:sniper_ammo": {
+            "mode": "drop",
+            "casing": "superbaddon:brass_casing",
+            "count": 1,
+            "pickup_delay": 24,
+            "offset": [
+              0.18,
+              -0.04,
+              -0.12
+            ],
+            "velocity": [
+              0.1,
+              0.07,
+              -0.03
+            ],
+            "random_velocity": 0.03,
+            "ports": [
+              {
+                "id": "right",
+                "offset": [
+                  0.18,
+                  -0.04,
+                  -0.12
+                ],
+                "velocity": [
+                  0.1,
+                  0.07,
+                  -0.03
+                ],
+                "random_velocity": 0.03
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

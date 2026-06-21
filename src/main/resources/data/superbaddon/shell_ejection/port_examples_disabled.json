@@ -1,0 +1,58 @@
+{
+  "format": 5,
+  "rules": [
+    {
+      "enabled": false,
+      "priority": 1500,
+      "target": {
+        "vehicles": [
+          "superbwarfare:example_vehicle"
+        ],
+        "weapons": [
+          "left_cannon",
+          "superbwarfare:example_vehicle/left_cannon"
+        ],
+        "requires_vehicle": true
+      },
+      "ejection": {
+        "default": {
+          "mode": "drop",
+          "casing": "superbaddon:autocannon_casing",
+          "count": 1,
+          "pickup_delay": 60,
+          "fallback_to_drop": false,
+          "ports": [
+            {
+              "id": "left_cannon_port",
+              "offset": [
+                -0.45,
+                -0.1,
+                -0.2
+              ],
+              "velocity": [
+                -0.18,
+                0.1,
+                -0.04
+              ],
+              "random_velocity": 0.05
+            },
+            {
+              "id": "right_cannon_port",
+              "offset": [
+                0.45,
+                -0.1,
+                -0.2
+              ],
+              "velocity": [
+                0.18,
+                0.1,
+                -0.04
+              ],
+              "random_velocity": 0.05
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

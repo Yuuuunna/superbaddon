@@ -1,0 +1,43 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="GPL-3.0-or-later"
+
+[[mods]]
+modId="superbaddon"
+version="0.1.0"
+displayName="SuperbAddon"
+authors="Atsuishio addon scaffold, generated implementation"
+description='''
+Data-driven shell casing ejection addon for SuperbWarfare.
+'''
+
+[[dependencies.superbaddon]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47.4.0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.superbaddon]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.superbaddon]]
+    modId="superbwarfare"
+    mandatory=true
+    versionRange="[0.8.9,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.superbaddon]]
+    modId="geckolib"
+    mandatory=true
+    versionRange="[4.4.6,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[mixins]]
+config="superbaddon.mixins.json"

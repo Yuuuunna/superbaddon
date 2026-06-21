@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.yy.superbaddon.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "superbaddon.refmap.json",
+  "mixins": [
+    "AmmoConsumerMixin",
+    "FallbackResourceManagerMixin",
+    "IngredientAccessor",
+    "RecipeManagerMixin",
+    "RegisterContainersEventMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "EntityRenderDispatcherMixin",
+    "MtsCameraTiltMixin"
+  ]
+}

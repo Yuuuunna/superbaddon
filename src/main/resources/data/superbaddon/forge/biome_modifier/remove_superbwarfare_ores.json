@@ -1,0 +1,21 @@
+{
+  "forge:conditions": [
+    {
+      "type": "superbaddon:worldgen_ores",
+      "namespace": "superbwarfare"
+    }
+  ],
+  "type": "forge:remove_features",
+  "biomes": "#is_overworld",
+  "features": [
+    "superbwarfare:silver_ore",
+    "superbwarfare:deepslate_silver_ore",
+    "superbwarfare:galena_ore",
+    "superbwarfare:deepslate_galena_ore",
+    "superbwarfare:scheelite_ore",
+    "superbwarfare:deepslate_scheelite_ore"
+  ],
+  "steps": [
+    "underground_ores"
+  ]
+}
