@@ -1,0 +1,27 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:autocannon_casing"
+    },
+    "count": 16
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "superbwarfare:primer"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:small_shell_aa",
+    "count": 16
+  },
+  "show_notification": true
+}

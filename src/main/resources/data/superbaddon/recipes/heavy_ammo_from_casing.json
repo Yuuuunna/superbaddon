@@ -1,0 +1,27 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:heavy_casing"
+    },
+    "count": 12
+  },
+  "ingredients": [
+    {
+      "tag": "superbwarfare:ingots/steel"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "superbwarfare:primer"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:heavy_ammo",
+    "count": 12
+  },
+  "show_notification": true
+}

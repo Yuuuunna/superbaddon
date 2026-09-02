@@ -4,7 +4,9 @@ import com.yy.superbaddon.content.ContentControlManager;
 import com.yy.superbaddon.content.VehicleRecipeOverrideManager;
 import com.yy.superbaddon.compat.mts.MtsCompatConfig;
 import com.yy.superbaddon.content.WorldgenOreCondition;
+import com.yy.superbaddon.penetration.ArmorPenetrationConfig;
 import com.yy.superbaddon.registry.ShellEjectionItems;
+import com.yy.superbaddon.registry.SuperbAddonRecipeSerializers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -20,7 +22,9 @@ public final class SuperbAddonMod {
     public SuperbAddonMod() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ShellEjectionItems.register(modBus);
+        SuperbAddonRecipeSerializers.register(modBus);
         WorldgenOreCondition.register();
+        ArmorPenetrationConfig.reload();
         ContentControlManager.reload();
         VehicleRecipeOverrideManager.reload();
         MtsCompatConfig.reload();

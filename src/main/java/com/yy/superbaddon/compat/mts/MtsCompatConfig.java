@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
 
 /**
@@ -121,31 +122,46 @@ public final class MtsCompatConfig {
         return Math.max(32, get().pumpSearchRadius());
     }
 
-    public static int energyForBucket(String fluid) {
+    /**
+     * The single fuel test.  A fluid is fuel only when {@code fluid_energy_per_bucket} lists it with
+     * a positive value; everything else -- water, milk, an unknown modded fluid, or an entry the pack
+     * author deliberately set to 0 -- is not fuel and must never be drained.  This mirrors MTS's own
+     * {@code JSONConfigSettings.Fuel.fuels}, where absence from the map means "not a fuel".
+     *
+     * <p>{@code default_energy_per_bucket} is the escape hatch for servers that really do want every
+     * fluid to burn; it defaults to 0 (off).</p>
+     *
+     * @return the energy one bucket is worth, or empty when the fluid is not fuel
+     */
+    public static OptionalInt fuelEnergyPerBucket(String fluid) {
         Parsed config = get();
-        String normalized = normalizeFluid(fluid);
-        Integer exact = config.fluidEnergyPerBucket().get(normalized);
-        if (exact != null) return Math.max(0, exact);
-
-        int colon = normalized.indexOf(':');
-        if (colon >= 0 && colon + 1 < normalized.length()) {
-            Integer byPath = config.fluidEnergyPerBucket().get(normalized.substring(colon + 1));
-            if (byPath != null) return Math.max(0, byPath);
-        }
-        return Math.max(0, config.defaultEnergyPerBucket());
+        Integer listed = config.fluidEnergyPerBucket().get(normalizeFluid(fluid));
+        int perBucket = listed != null ? listed : config.defaultEnergyPerBucket();
+        return perBucket > 0 ? OptionalInt.of(perBucket) : OptionalInt.empty();
     }
 
+    /**
+     * Energy for {@code mb} of fluid, rounded <em>down</em>.  Rounding up would hand out energy that
+     * was never paid for in fluid; rounding to nearest can return 0 for a small amount that a caller
+     * has already drained.  Callers must treat a 0 return as "do not drain".
+     */
     public static int energyForMb(String fluid, double mb) {
-        if (mb <= 0) return 0;
-        long energy = Math.round(energyForBucket(fluid) * (mb / 1000.0D));
+        int perBucket = fuelEnergyPerBucket(fluid).orElse(0);
+        if (mb <= 0 || perBucket <= 0) return 0;
+        long energy = (long) Math.floor(perBucket * (mb / 1000.0D));
         if (energy <= 0) return 0;
         return (int) Math.min(Integer.MAX_VALUE, energy);
     }
 
-    public static int mbForEnergyCeil(String fluid, int energy) {
-        int perBucket = energyForBucket(fluid);
+    /**
+     * Millibuckets to drain for at most {@code energy}, rounded <em>down</em> so the drained fluid is
+     * always fully paid for.  Returns 0 when a single millibucket would already be worth more energy
+     * than the target can take.
+     */
+    public static int mbForEnergyFloor(String fluid, int energy) {
+        int perBucket = fuelEnergyPerBucket(fluid).orElse(0);
         if (energy <= 0 || perBucket <= 0) return 0;
-        return Math.max(1, (int) Math.ceil(energy * 1000.0D / perBucket));
+        return (int) Math.min(Integer.MAX_VALUE, (long) Math.floor(energy * 1000.0D / perBucket));
     }
 
     public static boolean isAllowedJerrycan(ItemStack stack) {
@@ -173,7 +189,7 @@ public final class MtsCompatConfig {
         boolean jerrycanEnabled = true;
         boolean fuelPumpEnabled = true;
         boolean allowNbtOnlyJerrycanDetection = true;
-        int defaultEnergyPerBucket = 5_000_000;
+        int defaultEnergyPerBucket = 0;
         int pumpMbPerTick = 10;
         int pumpSearchRadius = 32;
         boolean bridgeControls = false;
@@ -186,7 +202,7 @@ public final class MtsCompatConfig {
                 if (rootElement != null && rootElement.isJsonObject()) {
                     JsonObject root = rootElement.getAsJsonObject();
                     enabled = bool(root, "enabled", enabled);
-                    defaultEnergyPerBucket = positiveInt(root, "default_energy_per_bucket", defaultEnergyPerBucket);
+                    defaultEnergyPerBucket = nonNegativeInt(root, "default_energy_per_bucket", defaultEnergyPerBucket);
 
                     JsonObject jerrycan = object(root, "jerrycan");
                     if (jerrycan != null) {
@@ -223,6 +239,12 @@ public final class MtsCompatConfig {
             }
         }
 
+        if (defaultEnergyPerBucket > 0) {
+            SuperbAddonMod.LOGGER.warn("MTS compat: default_energy_per_bucket={} -- every fluid not listed in "
+                    + "fluid_energy_per_bucket (water included) will be accepted as fuel. Set it to 0 to allow only "
+                    + "the listed fluids.", defaultEnergyPerBucket);
+        }
+
         return new Parsed(
                 enabled,
                 jerrycanEnabled,
@@ -253,7 +275,6 @@ public final class MtsCompatConfig {
         // vehicle's energy storage clamps the intake to its capacity.
         Map<String, Integer> map = new LinkedHashMap<>();
         map.put("lava", 5_000_000);
-        map.put("minecraft:lava", 5_000_000);
         map.put("fuel", 7_500_000);
         map.put("gasoline", 8_750_000);
         map.put("diesel", 10_000_000);
@@ -261,8 +282,16 @@ public final class MtsCompatConfig {
         return map;
     }
 
+    /**
+     * MTS tank fluid names carry no namespace ({@code EntityFluidTank.getFluid()} returns "lava",
+     * the owning mod lives in a separate field), so strip any namespace a config author typed and
+     * key everything by path.  One form, one lookup, no fallback chain.
+     */
     private static String normalizeFluid(String fluid) {
-        return fluid == null ? "" : fluid.trim().toLowerCase(Locale.ROOT);
+        if (fluid == null) return "";
+        String normalized = fluid.trim().toLowerCase(Locale.ROOT);
+        int colon = normalized.indexOf(':');
+        return colon >= 0 && colon + 1 < normalized.length() ? normalized.substring(colon + 1) : normalized;
     }
 
     private static JsonObject object(JsonObject object, String key) {
@@ -275,6 +304,12 @@ public final class MtsCompatConfig {
         return element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isBoolean()
                 ? element.getAsBoolean()
                 : fallback;
+    }
+
+    private static int nonNegativeInt(JsonObject object, String key, int fallback) {
+        JsonElement element = object.get(key);
+        if (element == null || !element.isJsonPrimitive() || !element.getAsJsonPrimitive().isNumber()) return fallback;
+        return Math.max(0, element.getAsInt());
     }
 
     private static int positiveInt(JsonObject object, String key, int fallback) {
@@ -300,8 +335,12 @@ public final class MtsCompatConfig {
         root.addProperty("_note", "Optional MinecraftTransportSimulator / Immersive Vehicles compatibility. No hard dependency is declared. "
                 + "Jerrycan consumes the MTS jerrycanFluid NBT and charges SuperbWarfare vehicles through Forge ENERGY. "
                 + "Fuel pump drains the MTS pump tank reflectively and charges the nearest SuperbWarfare vehicle.");
+        root.addProperty("_note_fuels", "fluid_energy_per_bucket is a whitelist: only the fluids listed here with a "
+                + "positive value can fuel a vehicle. Anything absent (water, milk, modded fluids) or set to 0 is "
+                + "rejected and never drained. Set default_energy_per_bucket above 0 only if you want EVERY fluid to "
+                + "burn at that rate. Use MTS fluid names without a namespace, e.g. \"lava\", not \"minecraft:lava\".");
         root.addProperty("enabled", true);
-        root.addProperty("default_energy_per_bucket", 5_000_000);
+        root.addProperty("default_energy_per_bucket", 0);
 
         JsonObject jerrycan = new JsonObject();
         jerrycan.addProperty("enabled", true);

@@ -39,6 +39,10 @@ final class MtsFuelPumpLinks {
             player.displayClientMessage(Component.translatable("message.superbaddon.mts_pump_empty"), true);
             return false;
         }
+        if (MtsCompatConfig.fuelEnergyPerBucket(tank.get().fluid()).isEmpty()) {
+            player.displayClientMessage(Component.translatable("message.superbaddon.mts_pump_bad_fuel"), true);
+            return false;
+        }
 
         VehicleEntity vehicle = findNearestVehicle(level, Vec3.atCenterOf(pumpPos), MtsCompatConfig.pumpSearchRadius());
         if (vehicle == null) {
@@ -97,6 +101,11 @@ final class MtsFuelPumpLinks {
             return false;
         }
 
+        if (MtsCompatConfig.fuelEnergyPerBucket(fluid).isEmpty()) {
+            notifyPlayer(level, link.playerUuid(), "message.superbaddon.mts_pump_bad_fuel");
+            return false;
+        }
+
         int maxMb = (int) Math.min(Math.floor(tank.level()), MtsCompatConfig.pumpMbPerTick());
         if (maxMb <= 0) return false;
 
@@ -115,19 +124,18 @@ final class MtsFuelPumpLinks {
             return false;
         }
 
-        int mbToDrain = Math.min(maxMb, MtsCompatConfig.mbForEnergyCeil(fluid, simulatedAccepted.get()));
-        if (mbToDrain <= 0) return false;
+        // Settle the whole transaction before touching the tank.  Everything below drain() must be
+        // unconditional: a bail-out after draining destroys the player's fuel and hands back nothing.
+        int mbToDrain = Math.min(maxMb, MtsCompatConfig.mbForEnergyFloor(fluid, simulatedAccepted.get()));
+        int energyToGive = MtsCompatConfig.energyForMb(fluid, mbToDrain);
+        if (mbToDrain <= 0 || energyToGive <= 0) return false;
 
         double drained = tank.drain(mbToDrain, true);
         if (drained <= 0) return false;
 
-        int actualEnergy = MtsCompatConfig.energyForMb(fluid, drained);
-        if (actualEnergy <= 0) return false;
-
-        AtomicInteger accepted = new AtomicInteger(0);
-        vehicle.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> accepted.set(receive(energy, actualEnergy)));
-
-        if (accepted.get() <= 0) return false;
+        // drain() may hand back less than asked for; re-price downwards, never upwards.
+        int actualEnergy = Math.min(energyToGive, MtsCompatConfig.energyForMb(fluid, drained));
+        vehicle.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> receive(energy, actualEnergy));
 
         MtsReflect.recordPumpDispense(pump, drained);
         blockEntity.setChanged();

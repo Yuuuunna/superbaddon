@@ -53,6 +53,41 @@
           ]
         }
       }
+    },
+    {
+      "enabled": false,
+      "priority": 1200,
+      "target": {
+        "vehicles": [
+          "superbwarfare:ah_6"
+        ],
+        "weapons": [
+          "cannon"
+        ]
+      },
+      "knockback": {
+        "direct": {
+          "mode": "scale",
+          "value": 0.5
+        },
+        "explosion": {
+          "mode": "scale",
+          "value": 0.25,
+          "max": 0.8
+        },
+        "by_ammo": {
+          "superbwarfare:small_shell_ap": {
+            "explosion": {
+              "mode": "disabled"
+            }
+          }
+        }
+      },
+      "ejection": {
+        "default": {
+          "mode": "none"
+        }
+      }
     }
   ]
 }

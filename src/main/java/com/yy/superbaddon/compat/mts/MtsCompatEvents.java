@@ -19,6 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.OptionalInt;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod.EventBusSubscriber(modid = SuperbAddonMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -71,11 +72,14 @@ public final class MtsCompatEvents {
         if (fluid.isBlank()) return false;
         if (!MtsCompatConfig.isAllowedJerrycan(stack)) return false;
 
-        int offer = MtsCompatConfig.energyForBucket(fluid);
-        if (offer <= 0) {
+        // Not a configured fuel: say so and hand the interaction back to MTS untouched.  The can keeps
+        // its fluid -- swallowing the click here would break the jerrycan's own right-click behaviour.
+        OptionalInt perBucket = MtsCompatConfig.fuelEnergyPerBucket(fluid);
+        if (perBucket.isEmpty()) {
             player.displayClientMessage(Component.translatable("message.superbaddon.mts_jerrycan_bad_fuel"), true);
-            return true;
+            return false;
         }
+        int offer = perBucket.getAsInt();
 
         AtomicInteger simulatedAccepted = new AtomicInteger(0);
         vehicle.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {

@@ -28,10 +28,26 @@ public final class ShellRuleSet {
     }
 
     public static Optional<ShellRule> match(ShellContext context) {
+        return matchEjection(context);
+    }
+
+    public static Optional<ShellRule> matchEjection(ShellContext context) {
         for (ShellRule rule : rules) {
-            if (rule.matches(context)) return Optional.of(rule);
+            if (rule.matchesEjection(context)) return Optional.of(rule);
         }
         return Optional.empty();
+    }
+
+    public static Optional<KnockbackMatch> matchKnockback(ShellContext context) {
+        for (ShellRule rule : rules) {
+            if (!rule.targetMatches(context)) continue;
+            Optional<com.yy.superbaddon.knockback.KnockbackSpec> selected = rule.selectedKnockback(context);
+            if (selected.isPresent()) return Optional.of(new KnockbackMatch(rule, selected.get()));
+        }
+        return Optional.empty();
+    }
+
+    public record KnockbackMatch(ShellRule rule, com.yy.superbaddon.knockback.KnockbackSpec spec) {
     }
 
     public static List<ShellRule> snapshot() {

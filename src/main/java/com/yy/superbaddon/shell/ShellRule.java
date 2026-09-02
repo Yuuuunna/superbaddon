@@ -2,6 +2,8 @@ package com.yy.superbaddon.shell;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.yy.superbaddon.knockback.KnockbackSpec;
+import com.yy.superbaddon.knockback.KnockbackTable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -22,13 +24,16 @@ public final class ShellRule {
     private final List<AmmoEjection> ammoEjections;
     private final ShellEjectionSpec defaultEjection;
 
+    private final KnockbackTable knockback;
+
     private ShellRule(
             ResourceLocation id,
             int priority,
             Target target,
             AmmoOverrideSpec ammoOverride,
             List<AmmoEjection> ammoEjections,
-            ShellEjectionSpec defaultEjection
+            ShellEjectionSpec defaultEjection,
+            KnockbackTable knockback
     ) {
         this.id = id;
         this.priority = priority;
@@ -36,6 +41,7 @@ public final class ShellRule {
         this.ammoOverride = ammoOverride == null ? AmmoOverrideSpec.disabled() : ammoOverride;
         this.ammoEjections = List.copyOf(ammoEjections == null ? List.of() : ammoEjections);
         this.defaultEjection = defaultEjection;
+        this.knockback = knockback == null ? KnockbackTable.INHERIT : knockback;
     }
 
     public ResourceLocation id() {
@@ -83,7 +89,20 @@ public final class ShellRule {
     }
 
     public boolean matches(ShellContext context) {
-        return target.matches(context) && selectedEjection(context).isPresent();
+        return matchesEjection(context);
+    }
+
+    public boolean targetMatches(ShellContext context) {
+        return target.matches(context);
+    }
+
+    public boolean matchesEjection(ShellContext context) {
+        return targetMatches(context) && selectedEjection(context).isPresent();
+    }
+
+    public Optional<KnockbackSpec> selectedKnockback(ShellContext context) {
+        KnockbackSpec selected = knockback.selected(context);
+        return selected.isPureInherit() ? Optional.empty() : Optional.of(selected);
     }
 
     public Optional<ShellEjectionSpec> selectedEjection(ShellContext context) {
@@ -118,13 +137,15 @@ public final class ShellRule {
         JsonObject targetObject = GsonHelper.getAsJsonObject(json, "target", new JsonObject());
         JsonObject ammoOverrideObject = GsonHelper.getAsJsonObject(json, "ammo_override", new JsonObject());
         JsonObject ejectionObject = GsonHelper.getAsJsonObject(json, "ejection", new JsonObject());
+        JsonObject knockbackObject = GsonHelper.getAsJsonObject(json, "knockback", new JsonObject());
 
         int priority = GsonHelper.getAsInt(json, "priority", 0);
         Target target = Target.fromJson(targetObject);
         AmmoOverrideSpec ammoOverride = AmmoOverrideSpec.fromJson(ammoOverrideObject);
         EjectionTable ejections = EjectionTable.fromJson(ejectionObject);
+        KnockbackTable knockback = KnockbackTable.fromJson(knockbackObject);
 
-        return new ShellRule(id, priority, target, ammoOverride, ejections.byAmmo(), ejections.defaultEjection());
+        return new ShellRule(id, priority, target, ammoOverride, ejections.byAmmo(), ejections.defaultEjection(), knockback);
     }
 
     public static String normalizeId(String raw) {

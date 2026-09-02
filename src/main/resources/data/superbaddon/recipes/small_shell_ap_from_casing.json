@@ -1,0 +1,27 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:autocannon_casing"
+    },
+    "count": 8
+  },
+  "ingredients": [
+    {
+      "item": "superbwarfare:tungsten_rod"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "superbwarfare:primer"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:small_shell_ap",
+    "count": 8
+  },
+  "show_notification": true
+}

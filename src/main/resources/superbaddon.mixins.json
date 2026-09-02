@@ -6,10 +6,18 @@
   "refmap": "superbaddon.refmap.json",
   "mixins": [
     "AmmoConsumerMixin",
+    "CustomExplosionBuilderMixin",
+    "CustomExplosionMixin",
+    "DamageHandlerMixin",
     "FallbackResourceManagerMixin",
+    "FastThrowableProjectileMixin",
+    "GunItemMixin",
     "IngredientAccessor",
+    "LivingEntityMixin",
+    "ProjectileEntityMixin",
     "RecipeManagerMixin",
-    "RegisterContainersEventMixin"
+    "RegisterContainersEventMixin",
+    "ResultSlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,27 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:brass_casing"
+    },
+    "count": 16
+  },
+  "ingredients": [
+    {
+      "tag": "forge:ingots/tungsten"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "superbwarfare:primer"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:sniper_ammo",
+    "count": 16
+  },
+  "show_notification": true
+}

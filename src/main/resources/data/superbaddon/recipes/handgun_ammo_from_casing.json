@@ -1,0 +1,27 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:brass_casing"
+    },
+    "count": 64
+  },
+  "ingredients": [
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "superbwarfare:primer"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:handgun_ammo",
+    "count": 64
+  },
+  "show_notification": true
+}

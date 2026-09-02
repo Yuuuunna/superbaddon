@@ -1,0 +1,24 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:large_shell_stub"
+    },
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "superbwarfare:wp_head"
+    },
+    {
+      "item": "superbwarfare:grain"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:large_shell_wp",
+    "count": 1
+  },
+  "show_notification": true
+}

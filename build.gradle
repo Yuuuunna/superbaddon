@@ -95,6 +95,10 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    // Epic Core API is an optional soft dependency.  The API is needed to compile the bridge,
+    // but it must never be bundled or required when the addon runs without ECA.
+    compileOnly fg.deobf("curse.maven:epic-core-api-977556:8595494")
+
     // Curios (required by SuperbWarfare)
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.4.2+1.20.1")
 
@@ -103,7 +107,9 @@ dependencies {
     implementation fg.deobf("com.eliotlash.mclib:mclib:20")
 
     // SuperbWarfare dependency (CurseMaven)
-    implementation fg.deobf("curse.maven:superb-warfare-1218165:8104849")
+    // 0.8.9.1-hotfix mc1.20.1, the current official release on CurseForge (file 8689629,
+    // built from upstream commit 993063bed).
+    implementation fg.deobf("curse.maven:superb-warfare-1218165:8689629")
 
     // MinecraftTransportSimulator / Immersive Vehicles — compile-only, OPTIONAL soft dependency.
     // CurseForge project 286703, file 7926604 (the exact build the addon targets for compat).
@@ -118,6 +124,9 @@ dependencies {
 
     // Mixin annotation processor — generates the refmap so mixins apply in reobf/production
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 }
 
 mixin {
@@ -155,6 +164,10 @@ tasks.named('jar', Jar).configure {
         ])
     }
     finalizedBy 'reobfJar'
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile).configureEach {

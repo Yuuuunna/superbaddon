@@ -2,6 +2,8 @@ package com.yy.superbaddon.command;
 
 import com.yy.superbaddon.content.ContentControlConfig;
 import com.yy.superbaddon.content.ContentControlManager;
+import com.yy.superbaddon.penetration.ArmorPenetrationAutofill;
+import com.yy.superbaddon.penetration.ArmorPenetrationConfig;
 import com.yy.superbaddon.shell.ExternalShellRuleLoader;
 import com.yy.superbaddon.shell.ShellRule;
 import com.yy.superbaddon.shell.ShellRuleSet;
@@ -31,7 +33,14 @@ public final class ShellEjectionCommands {
                                         .executes(context -> scan(context.getSource(), true)))))
                 .then(Commands.literal("content_control")
                         .then(Commands.literal("reload")
-                                .executes(context -> reloadContentControl(context.getSource())))));
+                                .executes(context -> reloadContentControl(context.getSource()))))
+                .then(Commands.literal("armor_penetration")
+                        .then(Commands.literal("reload")
+                                .executes(context -> reloadArmorPenetration(context.getSource())))
+                        .then(Commands.literal("status")
+                                .executes(context -> armorPenetrationStatus(context.getSource())))
+                        .then(Commands.literal("autofill")
+                                .executes(context -> autofillArmorPenetration(context.getSource())))));
     }
 
     private static int reloadExternal(CommandSourceStack source) {
@@ -81,5 +90,37 @@ public final class ShellEjectionCommands {
             source.sendFailure(Component.literal("Failed to write shell ejection scan: " + exception.getMessage()));
             return 0;
         }
+    }
+
+    private static int reloadArmorPenetration(CommandSourceStack source) {
+        ArmorPenetrationConfig.reload();
+        source.sendSuccess(() -> Component.literal("Reloaded armor penetration from " + ArmorPenetrationConfig.FILE
+                + " (enabled=" + ArmorPenetrationConfig.enabled()
+                + ", partial=" + ArmorPenetrationConfig.partialCount()
+                + ", full_bypass=" + ArmorPenetrationConfig.fullBypassCount() + ")"), true);
+        return ArmorPenetrationConfig.partialCount() + ArmorPenetrationConfig.fullBypassCount();
+    }
+
+    private static int armorPenetrationStatus(CommandSourceStack source) {
+        source.sendSuccess(() -> Component.literal("Armor penetration: enabled=" + ArmorPenetrationConfig.enabled()
+                + ", partial=" + ArmorPenetrationConfig.partialCount()
+                + ", full_bypass=" + ArmorPenetrationConfig.fullBypassCount()
+                + ", config=" + ArmorPenetrationConfig.FILE), false);
+        return ArmorPenetrationConfig.partialCount() + ArmorPenetrationConfig.fullBypassCount();
+    }
+
+    private static int autofillArmorPenetration(CommandSourceStack source) {
+        ArmorPenetrationAutofill.ScanResult scan = ArmorPenetrationAutofill.scanVehicleWeapons();
+        ArmorPenetrationConfig.WeaponArmorPenetrationUpdate update =
+                ArmorPenetrationConfig.addMissingWeaponArmorPenetration(scan.partial(), scan.fullBypass());
+        source.sendSuccess(() -> Component.literal("Autofilled armor penetration defaults in " + ArmorPenetrationConfig.FILE
+                + " (vehicles=" + scan.vehicleCount()
+                + ", weapons=" + scan.weaponCount()
+                + ", candidate_partial=" + scan.partial().size()
+                + ", candidate_full_bypass=" + scan.fullBypass().size()
+                + ", added_partial=" + update.partialAdded()
+                + ", added_full_bypass=" + update.fullBypassAdded()
+                + ", skipped_generic_projectile=" + scan.skippedGenericWeaponCount() + ")"), true);
+        return update.partialAdded() + update.fullBypassAdded();
     }
 }

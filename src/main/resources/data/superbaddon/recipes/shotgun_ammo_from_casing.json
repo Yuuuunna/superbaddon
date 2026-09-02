@@ -1,0 +1,27 @@
+{
+  "type": "superbaddon:shell_reloading",
+  "category": "misc",
+  "group": "shell_reloading",
+  "casing": {
+    "ingredient": {
+      "item": "superbaddon:shotgun_hull"
+    },
+    "count": 24
+  },
+  "ingredients": [
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "superbwarfare:primer"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:shotgun_ammo",
+    "count": 24
+  },
+  "show_notification": true
+}

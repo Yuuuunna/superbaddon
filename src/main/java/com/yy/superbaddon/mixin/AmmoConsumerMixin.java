@@ -64,6 +64,20 @@ public abstract class AmmoConsumerMixin {
         return MtsBulletAmmo.isBullet(self.stack());
     }
 
+    /**
+     * Injection order makes these HEAD hooks see a freshly built consumer before upstream's lazy
+     * {@code init()} has run, when the MTS stack is still empty.  Running init here (the init
+     * injector intercepts it for MTS consumers) closes that first-call window; for regular
+     * consumers this just runs upstream init a moment earlier, which is harmless.
+     */
+    private boolean superbaddon$ensureMtsReady() {
+        AmmoConsumer self = (AmmoConsumer) (Object) this;
+        if (!this.initialized) {
+            self.init();
+        }
+        return superbaddon$isMtsBulletConsumer();
+    }
+
     private Item superbaddon$bulletItem() {
         return ((AmmoConsumer) (Object) this).stack().getItem();
     }
@@ -78,28 +92,61 @@ public abstract class AmmoConsumerMixin {
     @Inject(method = "count(Lcom/atsuishio/superbwarfare/data/gun/GunData;Lnet/minecraftforge/items/IItemHandler;)I",
             at = @At("HEAD"), cancellable = true, remap = false)
     private void superbaddon$countMtsBullet(GunData data, IItemHandler handler, CallbackInfoReturnable<Integer> cir) {
-        if (!superbaddon$isMtsBulletConsumer()) return;
+        if (!superbaddon$ensureMtsReady()) return;
         cir.setReturnValue(MtsBulletAmmo.countQty(handler, superbaddon$bulletItem()));
     }
 
     @Inject(method = "consume(Lcom/atsuishio/superbwarfare/data/gun/GunData;Lnet/minecraftforge/items/IItemHandler;I)I",
             at = @At("HEAD"), cancellable = true, remap = false)
     private void superbaddon$consumeMtsBullet(GunData data, IItemHandler handler, int count, CallbackInfoReturnable<Integer> cir) {
-        if (!superbaddon$isMtsBulletConsumer()) return;
+        if (!superbaddon$ensureMtsReady()) return;
         cir.setReturnValue(MtsBulletAmmo.consumeQty(handler, superbaddon$bulletItem(), count));
+    }
+
+    /**
+     * 0.8.9.1's strategy rewrite routes the entity overloads through AmmoConsumeStrategy instead of
+     * delegating to the handler overloads, so the MTS reroute needs its own hooks on this path.
+     * Upstream resolves the same {@code ITEM_HANDLER} capability for entities (ItemAmmoStrategy),
+     * so counting/consuming rounds through {@link MtsBulletAmmo#handlerOf} stays equivalent.
+     */
+    @Inject(method = "count(Lcom/atsuishio/superbwarfare/data/gun/GunData;Lnet/minecraft/world/entity/Entity;)I",
+            at = @At("HEAD"), cancellable = true, remap = false)
+    private void superbaddon$countMtsBulletEntity(GunData data, Entity entity, CallbackInfoReturnable<Integer> cir) {
+        if (!superbaddon$ensureMtsReady()) return;
+        // Cancelling at HEAD also skips upstream's null guard — replicate it.
+        if (entity == null) {
+            cir.setReturnValue(0);
+            return;
+        }
+        IItemHandler handler = MtsBulletAmmo.handlerOf(entity);
+        cir.setReturnValue(handler == null ? 0 : MtsBulletAmmo.countQty(handler, superbaddon$bulletItem()));
+    }
+
+    @Inject(method = "consume(Lcom/atsuishio/superbwarfare/data/gun/GunData;Lnet/minecraft/world/entity/Entity;I)I",
+            at = @At("HEAD"), cancellable = true, remap = false)
+    private void superbaddon$consumeMtsBulletEntity(GunData data, Entity shooter, int count, CallbackInfoReturnable<Integer> cir) {
+        if (!superbaddon$ensureMtsReady()) return;
+        // Cancelling at HEAD also skips upstream's early returns — replicate them
+        // (zero counts are no-ops and creative players never pay).
+        if (count <= 0 || shooter instanceof Player player && player.isCreative()) {
+            cir.setReturnValue(0);
+            return;
+        }
+        IItemHandler handler = MtsBulletAmmo.handlerOf(shooter);
+        cir.setReturnValue(handler == null ? 0 : MtsBulletAmmo.consumeQty(handler, superbaddon$bulletItem(), count));
     }
 
     @Inject(method = "withdraw(Lnet/minecraftforge/items/IItemHandler;I)I",
             at = @At("HEAD"), cancellable = true, remap = false)
     private void superbaddon$withdrawMtsBulletHandler(IItemHandler handler, int count, CallbackInfoReturnable<Integer> cir) {
-        if (!superbaddon$isMtsBulletConsumer()) return;
+        if (!superbaddon$ensureMtsReady()) return;
         cir.setReturnValue(MtsBulletAmmo.insertQty(handler, superbaddon$bulletItem(), count));
     }
 
     @Inject(method = "withdraw(Lnet/minecraft/world/entity/Entity;I)I",
             at = @At("HEAD"), cancellable = true, remap = false)
     private void superbaddon$withdrawMtsBulletEntity(Entity ammoSupplier, int count, CallbackInfoReturnable<Integer> cir) {
-        if (!superbaddon$isMtsBulletConsumer()) return;
+        if (!superbaddon$ensureMtsReady()) return;
         Item item = superbaddon$bulletItem();
         if (ammoSupplier instanceof Player player) {
             cir.setReturnValue(MtsBulletAmmo.insertQty(player, item, count));

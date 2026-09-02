@@ -4,7 +4,7 @@ license="GPL-3.0-or-later"
 
 [[mods]]
 modId="superbaddon"
-version="0.1.0"
+version="1.0.1"
 displayName="SuperbAddon"
 authors="Atsuishio addon scaffold, generated implementation"
 description='''
@@ -28,7 +28,7 @@ Data-driven shell casing ejection addon for SuperbWarfare.
 [[dependencies.superbaddon]]
     modId="superbwarfare"
     mandatory=true
-    versionRange="[0.8.9,)"
+    versionRange="[0.8.9.1,)"
     ordering="AFTER"
     side="BOTH"
 
