@@ -1,0 +1,62 @@
+name: Recover Wiki Before Destructive Sync
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/recover-wiki.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore previous Wiki snapshot and import it into docs/wiki
+        env:
+          WIKI_REPO: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
+        run: |
+          set -euo pipefail
+
+          workdir="$(mktemp -d)"
+          wiki_dir="$workdir/wiki"
+
+          git clone "$WIKI_REPO" "$wiki_dir"
+
+          previous="$(git -C "$wiki_dir" rev-parse HEAD^)"
+          echo "Restoring Wiki snapshot $previous"
+
+          git -C "$wiki_dir" config user.name "github-actions[bot]"
+          git -C "$wiki_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Restore every tracked file to the state immediately before the
+          # destructive docs/wiki synchronization commit.
+          git -C "$wiki_dir" restore --source="$previous" --staged --worktree .
+          git -C "$wiki_dir" add -A
+
+          if ! git -C "$wiki_dir" diff --cached --quiet; then
+            git -C "$wiki_dir" commit -m "Restore Wiki before destructive sync"
+            git -C "$wiki_dir" push origin HEAD:master
+          fi
+
+          # Keep a canonical copy in the main repository as well.
+          rm -rf docs/wiki
+          mkdir -p docs/wiki
+          rsync -a --exclude='.git/' "$wiki_dir/" docs/wiki/
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/wiki
+
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: recover existing Wiki into docs/wiki"
+            git push origin HEAD:master
+          fi
