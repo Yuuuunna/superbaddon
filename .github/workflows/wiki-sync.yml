@@ -38,15 +38,15 @@ jobs:
           workdir="$(mktemp -d)"
           wiki_dir="$workdir/wiki"
 
-          # Preserve existing Wiki history when the Wiki repository is already initialized.
-          # If it has never had a page, prepare an initial repository instead.
           if ! git clone "$WIKI_REPO" "$wiki_dir"; then
             mkdir -p "$wiki_dir"
             git -C "$wiki_dir" init -b master
             git -C "$wiki_dir" remote add origin "$WIKI_REPO"
           fi
 
-          rsync -a --delete --exclude='.git/' docs/wiki/ "$wiki_dir/"
+          # Non-destructive sync: update/add files present in docs/wiki,
+          # but never delete Wiki pages that are not represented there.
+          rsync -a --exclude='.git/' docs/wiki/ "$wiki_dir/"
 
           git -C "$wiki_dir" config user.name "github-actions[bot]"
           git -C "$wiki_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
