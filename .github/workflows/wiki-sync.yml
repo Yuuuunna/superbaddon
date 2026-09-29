@@ -1,0 +1,61 @@
+name: Sync Wiki
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'docs/wiki/**'
+      - '.github/workflows/wiki-sync.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wiki-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync docs/wiki to GitHub Wiki
+        env:
+          WIKI_REPO: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
+        run: |
+          set -euo pipefail
+
+          if [ ! -f docs/wiki/Home.md ]; then
+            echo "docs/wiki/Home.md is required."
+            exit 1
+          fi
+
+          workdir="$(mktemp -d)"
+          wiki_dir="$workdir/wiki"
+
+          # Preserve existing Wiki history when the Wiki repository is already initialized.
+          # If it has never had a page, prepare an initial repository instead.
+          if ! git clone "$WIKI_REPO" "$wiki_dir"; then
+            mkdir -p "$wiki_dir"
+            git -C "$wiki_dir" init -b master
+            git -C "$wiki_dir" remote add origin "$WIKI_REPO"
+          fi
+
+          rsync -a --delete --exclude='.git/' docs/wiki/ "$wiki_dir/"
+
+          git -C "$wiki_dir" config user.name "github-actions[bot]"
+          git -C "$wiki_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$wiki_dir" add -A
+
+          if git -C "$wiki_dir" diff --cached --quiet; then
+            echo "Wiki is already up to date."
+            exit 0
+          fi
+
+          git -C "$wiki_dir" commit -m "Sync Wiki from ${GITHUB_SHA::7}"
+          git -C "$wiki_dir" push origin HEAD:master
