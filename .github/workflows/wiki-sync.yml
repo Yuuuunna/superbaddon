@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - 'docs/wiki/**'
+      - 'docs/validate_wiki.py'
+      - 'docs/test_validate_wiki.py'
       - '.github/workflows/wiki-sync.yml'
   workflow_dispatch:
 
@@ -23,6 +25,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Test Wiki validator
+        run: python3 -m unittest discover -s docs -p 'test_validate_wiki.py' -v
+
+      - name: Validate Wiki pages and JSON examples
+        run: python3 docs/validate_wiki.py
 
       - name: Sync docs/wiki to GitHub Wiki
         env:
